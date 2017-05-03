@@ -1,0 +1,128 @@
+body {
+    background-color: rgb(0,0,0);
+    font-family: Ubuntu;
+    color:lightskyblue ;
+    font-weight: normal;
+    background-image: url("http://www.viralescuriosos.com/wp-content/uploads/web-animados-yin_yang.gif");
+
+}
+
+a { text-decoration: none; color: #ffffff; }
+a:hover { text-decoration: underline; }
+
+h1 {
+    background-color: black;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 5px;
+}
+
+.container {
+    text-align: center;
+    width: 440px;
+    margin: 0 auto 0 auto;
+    border: 2px solid moccasin;
+    background-color: #333333;
+    background-image: url("https://www.transparenttextures.com/patterns/brick-wall.png");
+    /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+}
+/*Control buttons - Start and Counter*/
+.control_item {
+
+    background-color: #808080;
+    display: inline-block;
+    border-radius: 15%;
+    width: 100px;
+    text-align: center;
+    margin: 8px 2px 2px 2px;
+    color: black;
+    font-weight: bold;
+    max-width: 100px;
+    height: 30px;
+    line-height: 30px;
+}
+.controls {
+    height: 50px;
+    margin: 0 auto 10px auto;
+    background-color: black;
+    text-align: center;
+}
+
+.col-sm-3 {
+    display: inline-block;
+
+}
+
+.pad {
+
+    display: inline-block;
+    border-radius: 25%;    /* If need round button*/
+    width: 150px;
+    height: 140px;
+    border: solid 3px black;
+    margin: 2px;
+    cursor: not-allowed;
+}
+
+#red { background-color: red; }
+#yel { background-color: yellow; }
+#gre { background-color: green; }
+#blu { background-color: blue; }
+
+#info {
+    margin-top: 10px;
+    background-color: black;
+    text-align: center;
+    padding: 10px 5px 10px 5px;
+    margin: 10px auto 0 auto;
+    height: 2em;
+// border: 1px solid black;
+}
+
+.footer {
+    text-transform: uppercase;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: 1.5px;
+    padding-top: 5px;
+// border-top: 3px dashed #ffff33;
+    text-decoration: none;
+    position:fixed;
+    bottom:0px;
+    left:30px;
+    z-index:1}
+}
+#yin-yang {
+    width: 96px;
+    height: 48px;
+    background: #eee;
+    border-color: red;
+    border-style: solid;
+    border-width: 2px 2px 50px 2px;
+    border-radius: 100%;
+    position: relative;
+}
+
+#yin-yang:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    background: #eee;
+    border: 18px solid red;
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+}
+
+#yin-yang:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: red;
+    border: 18px solid #eee;
+    border-radius:100%;
+    width: 12px;
+    height: 12px;
+}
