@@ -1,6 +1,3 @@
-/**
- * Created by bichtran on 5/1/17.
- */
 var soundBlu;
 var soundYel;
 var soundGre;
@@ -8,177 +5,205 @@ var soundRed;
 var colorSequence = [];
 var numberRight = 0;
 var numberProgress = 0;
-var maxPlay = 5;   //You win after 5 correct answers
-// var checkInput;
-var mode = "";  // identify the input mode User or not
+var checkInput;
+var mode = "";
 var strict = false;
 
 function setInfo(text) {
-    // document.getElementById("info").innerHTML = text;
-    $("#info").html(text);
+  //document.getElementById("info").innerHTML = text;
+  $("#info").html(text);
+  console.log(text);
 }
 
 $(document).ready(function() {
 
-  console.log("ready");
-    setInfo("Press start to begin");
-    loadSounds();
-    setControlsActive();
+  //console.log("ready");
+  setInfo("Press start to begin");
+   // $("#reset").addClass('hidden');
+  loadSounds();
+  setControlsActive();
 
-});
+
+
+
 
 function loadSounds() {
-    soundBlu = document.createElement('audio');
-    soundBlu.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3');
-    soundRed = document.createElement('audio');
-    soundRed.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3');
-    soundGre = document.createElement('audio');
-    soundGre.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3');
-    soundYel = document.createElement('audio');
-    soundYel.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3');
+  soundBlu = document.createElement('audio');
+  soundBlu.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3');
+  soundRed = document.createElement('audio');
+  soundRed.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3');
+  soundGre = document.createElement('audio');
+  soundGre.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3');
+  soundYel = document.createElement('audio');
+  soundYel.setAttribute('src', 'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3');
 }
 
 function playSequence() {
 
-    setInfo("Watch the flashing buttons.");
-    mode="notUserInput";
-    console.log("==========Entree Correcte: " + numberRight+"================");
-    setPadsInactive();
-    setControlsInactive();
-    numberProgress = 0;
-    //console.log("Progress: "+ numberProgress)
-    // play current numberRight + 1, the player needs to copy
-
-    var i=0;
-    // Fire the function padPress until clearInterval is called
-    var timer = setInterval( function() {
-
-        padPress(colorSequence[i]);
-        i++;
-
-        //console.log(i + " of "+(numberRight+1));
-
-        if(i===numberRight+1) {
-            clearInterval(timer);
-            setPadsActive();
-            setControlsActive();
-            //console.log("check input");
-            setInfo("Repeat the pattern.");
-            mode = "userInput";
-        }
-
-    }, 1000);
-
-}
-//Random colorSequence generated:
-function generateSequence() {
-    for (i = 0; i < maxPlay; i++) {
-        var no = Math.floor(Math.random() * 4);
-        switch (no) {
-            case 0:
-                colorSequence.push("blu");
-                break;
-            case 1:
-                colorSequence.push("red");
-                break;
-            case 2:
-                colorSequence.push("gre");
-                break;
-            case 3:
-                colorSequence.push("yel");
-                break;
-        }
-
+  setInfo("Watch the flashing buttons.");
+  mode="notUserInput";
+  //console.log("play sequence length: " + numberRight);
+  setPadsInactive();
+  setControlsInactive();
+  numberProgress = 0;
+  // play current numberRight + 1, the player needs to copy
+  
+  var i=0;
+  
+  var timer = setInterval( function() { 
+  
+    simonMain(colorSequence[i]);
+    i++;
+    
+    //console.log(i + " of "+(numberRight+1));
+    
+    if(i===numberRight+1) {
+      clearInterval(timer);
+      setPadsActive();
+      setControlsActive();
+      //console.log("check input");
+      setInfo("Repeat the pattern.");
+      mode = "userInput";
     }
-    console.log(colorSequence);
+    
+  }, 1000);
+
 }
 
-function resetButton() {
-    console.log("reset clicked");
-    //document.getElementById("start").onclick = function() {
-    //    startButton();
-    $("#start").click(function () {
-        startButton();
+function generateSequence() {
+  for (i = 0; i < 20; i++) {
+    var no = Math.floor(Math.random() * 4);
+    switch (no) {
+      case 0:
+        colorSequence.push("blu");
+        break;
+      case 1:
+        colorSequence.push("red");
+        break;
+      case 2:
+        colorSequence.push("gre");
+        break;
+      case 3:
+        colorSequence.push("yel");
+        break;
+    }
+
+  }
+  console.log(colorSequence);
+}
+  $("#reset").click(function (){
+
+      colorSequence = [];
+      numberRight = 0;
+      numberProgress = 0;
+      $("#count").html("Recount");
+      setPadsInactive();
+      setInfo("Press Start to begin.")
+
+  });
+    $("#start").click(function (){
+        setControlsInactive();
+        // $("#reset").addClass('hidden');
+        $("#count").html(0);
+        generateSequence();
+        // loop,
+        playSequence()
     });
 
-    //document.getElementById("start").innerHTML = "Start";
-    $("#start").html("Start");
-
-    colorSequence = [];
-    numberRight = 0;
-    numberProgress = 0;
-    document.getElementById("count").innerHTML = "0";
-    setPadsInactive();
-    setInfo("Press Start to begin.")
-}
-
-function startButton() {
-    console.log("start clicked");
-
-    // document.getElementById("start").onclick = function() { resetButton(); };
-    // document.getElementById("start").innerHTML = "Reset";
-    $("#start").click(function () {
-        resetButton();
-    });
-    $("#start").html("Reset");
-    setControlsInactive();
-    //document.getElementById("count").innerHTML = 0;  (Just Change)
-    $("#count").html(0);
-    generateSequence();
-
-    // loop,
-    playSequence();
 
 
-}
+
+// function resetButton() {
+//
+//   document.getElementById("start").onclick = function() {
+//     startButton();
+//   };
+//
+//   $("#start").html("Start");
+//     setControlsInactive();
+//     // document.getElementById("count").innerHTML = 0;
+//     $("#count").html(0);
+//     generateSequence();
+//
+//     // loop,
+//     playSequence();
+// }
+
+
+
+// function startButton() {
+//   //console.log("start clicked");
+//
+// 	  // var startReset = document.getElementById("start").onclick = function() {
+// 	  //  resetButton();
+// 	//   };
+//    var startReset = $("#start").click(function() {
+//     resetButton(); } );
+//
+//   alert("resetStart: " + startReset);
+//   //document.getElementById("start").innerHTML = "Reset";
+//   $("#start").html("Reset");
+//
+//   setControlsInactive();
+//  // document.getElementById("count").innerHTML = 0;
+// 	$("#count").html(0);
+//   generateSequence();
+//
+//   // loop,
+//   playSequence();
+//
+//
+// }
+//
 
 function strictButton() {
- console.log("strict clicked");
-    if(!strict) {
-        strict=true;
-        $("#strict").html("Play Mode").css("background-color", "yellow");
-
-    } else {
-        strict=false;
-        $("#strict").html("Demo Mode").css("background-color", "blue");
-    }
-
+  //console.log("strict clicked");
+  if(!strict) {
+    strict=true;
+    //document.getElementById("strict").innerHTML = "Strict is on";
+	$("#strict").html("Game Mode");
+  } else {
+    strict=false;
+    // document.getElementById("strict").innerHTML = "Strict is off";
+	$("#strict").html("Demo Mode");
+  }
+    
 }
 
-function padPress(color) {
-    console.log(mode);
-    console.log("Color to compare: "+color);
+function simonMain(color) {
+    //console.log(color + " pressed");
+    console.log("Mode: " + mode);
 
 
-    //Checking user input against the color in color sequence array
-    if(mode==="userInput") {
+    // if checking against
+    if (mode === "userInput") {
 
         //console.log("checking User input");
-        if(color === colorSequence[numberProgress]) {
+        if (color === colorSequence[numberProgress]) {
 
             //console.log("correct, got: " + numberProgress + " of " + numberRight);
             // setInfo("Correct! " + numberProgrss + " out of " + numberRight);
             numberProgress++;
 
-            if(numberProgress===maxPlay)
-            {
+            if (numberProgress === 20) {
                 setInfo("You win!");
                 setPadsInactive();
                 return;
             }
 
-            if(numberProgress === (numberRight+1)) {
+            if (numberProgress === (numberRight + 1)) {
                 numberRight++;
-                document.getElementById("count").innerHTML = numberRight;
+                //document.getElementById("count").innerHTML = numberRight;
+                $("#count").html(numberRight);
                 //console.log("Got sequence correct");
                 setPadsInactive();
 
-                setTimeout(function() {
+                setTimeout(function () {
                     //soundBlu.play();
-                    setInfo("Correct - wait for the sequence to repeat but with one more on the end");
+                    setInfo("Correct - wait for the sequence " + "<br>" + "to repeat but with one more on the end");
                 }, 1000);
 
-                setTimeout(function() {
+                setTimeout(function () {
                     playSequence();
                 }, 4000);
 
@@ -188,23 +213,28 @@ function padPress(color) {
             //console.log("INCORRECT");
             setPadsInactive();
 
-            setTimeout(function() {
+            setTimeout(function () {
                 soundBlu.play();
 
-                if(strict) {
+                if (strict) {
                     //console.log("start again");
-                    setInfo("WRONG. I'm being strict: start again from 0");
+                    setInfo("Play Mode. Restart from 0");
                     numberProgess = 0;
                     numberRight = 0;
+                    $("#count").html(numberRight);
 
-                    setTimeout(function() { playSequence(); },1000);
+                    setTimeout(function () {
+                        playSequence();
+                    }, 1000);
 
                 } else {
                     //console.log("have another go");
                     numberProgress = 0;
-                    setInfo("WRONG. Have another go at this sequence");
+                    setInfo("Demo Mode: one more chance!");
 
-                    setTimeout(function() { playSequence(); },1000);
+                    setTimeout(function () {
+                        playSequence();
+                    }, 1000);
                 }
             }, 250);
 
@@ -214,6 +244,8 @@ function padPress(color) {
 
 
     var origColor = document.getElementById(color).style.backgroundColor;
+    console.log("Couleur: " + color);
+    // console.log("Couleur origine: "+ origColor);
 
     switch (color) {
         case 'blu':
@@ -234,70 +266,83 @@ function padPress(color) {
             break;
     }
 
-    setTimeout(function() {
+    setTimeout(function () {
         document.getElementById(color).style.backgroundColor = origColor;
     }, 500);
 }
+    function setControlsActive() {
+        var isStart = $("#start").html();
+        console.log(isStart);
+        if (isStart === "Start") {
+            setControlsInactive();
 
-function setControlsActive() {
+        } else {
+            setPadsInactive();
+            setInfo("Press Start to begin.")
 
-    if(document.getElementById("start").innerHTML === "Start") {
-        document.getElementById("start").onclick = function() {
-            startButton();
+        }
+
+        // if(document.getElementById("start").innerHTML === "Start") {
+        //   document.getElementById("start").onclick = function() {
+        //     startButton();
+        //   };
+        // } else {
+        //   document.getElementById("start").onclick = function() {
+        //     resetButton();
+        //   };
+        // };
+        //
+        document.getElementById("start").style.cursor = "pointer";
+
+        document.getElementById("strict").onclick = function () {
+            strictButton();
         };
-    } else {
-        document.getElementById("start").onclick = function() {
-            resetButton();
-        };
+        document.getElementById("strict").style.cursor = "pointer";
     }
 
-    document.getElementById("start").style.cursor = "pointer";
+    function setControlsInactive() {
 
-    document.getElementById("strict").onclick = function() {
-        strictButton();
-    };
-    document.getElementById("strict").style.cursor = "pointer";
-}
+        document.getElementById("start").onclick = "";
+        document.getElementById("start").style.cursor = "not-allowed";
+        // $("#start").click(false);
+        // $("#start").css({cursor:"default"});
+        document.getElementById("strict").onclick = "";
+        document.getElementById("strict").style.cursor = "not-allowed";
 
-function setControlsInactive() {
+    }
 
-    document.getElementById("start").onclick = "";
-    document.getElementById("start").style.cursor = "not-allowed";
-    document.getElementById("strict").onclick = "";
-    document.getElementById("strict").style.cursor = "not-allowed";
-}
+    function setPadsActive() {
+        document.getElementById("blu").onclick = function () {
+            simonMain("blu");
+        };
+        document.getElementById("gre").onclick = function () {
+            simonMain("gre");
+        };
+        document.getElementById("yel").onclick = function () {
+            simonMain("yel");
+        };
+        document.getElementById("red").onclick = function () {
+            simonMain("red");
+        };
+        document.getElementById("blu").style.cursor = "pointer";
+        document.getElementById("gre").style.cursor = "pointer";
+        document.getElementById("yel").style.cursor = "pointer";
+        document.getElementById("red").style.cursor = "pointer";
+    }
 
-function setPadsActive() {
-    document.getElementById("blu").onclick = function() {
-        padPress("blu");
-        console.log("User click blu");
-    };
-    document.getElementById("gre").onclick = function() {
-        padPress("gre");
-        console.log("User click gre");
-    };
-    document.getElementById("yel").onclick = function() {
-        padPress("yel");
-        console.log("User clck yel");
-    };
-    document.getElementById("red").onclick = function() {
-        padPress("red");
-        console.log("User click red");
-    };
-    document.getElementById("blu").style.cursor = "pointer";
-    document.getElementById("gre").style.cursor = "pointer";
-    document.getElementById("yel").style.cursor = "pointer";
-    document.getElementById("red").style.cursor = "pointer";
-}
+    function setPadsInactive() {
+        document.getElementById("blu").onclick = "";
+        document.getElementById("gre").onclick = "";
+        document.getElementById("yel").onclick = "";
+        document.getElementById("red").onclick = "";
 
-function setPadsInactive() {
-    document.getElementById("blu").onclick = "";
-    document.getElementById("gre").onclick = "";
-    document.getElementById("yel").onclick = "";
-    document.getElementById("red").onclick = "";
+        document.getElementById("blu").style.cursor = "not-allowed";
+        document.getElementById("gre").style.cursor = "not-allowed";
+        document.getElementById("yel").style.cursor = "not-allowed";
+        document.getElementById("red").style.cursor = "not-allowed";
+    }
 
-    document.getElementById("blu").style.cursor = "not-allowed";
-    document.getElementById("gre").style.cursor = "not-allowed";
-    document.getElementById("yel").style.cursor = "not-allowed";
-    document.getElementById("red").style.cursor = "not-allowed";
-}
+});
+//	function setForUserPress() {}
+
+//	function setForPlayBack() {}
