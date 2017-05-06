@@ -19,11 +19,8 @@ $(document).ready(function() {
 
   //console.log("ready");
   setInfo("Press start to begin");
-   // $("#reset").addClass('hidden');
   loadSounds();
   setControlsActive();
-
-
 
 
 
@@ -52,7 +49,7 @@ function playSequence() {
   
   var timer = setInterval( function() { 
   
-    simonMain(colorSequence[i]);
+    padPress(colorSequence[i]);
     i++;
     
     //console.log(i + " of "+(numberRight+1));
@@ -91,70 +88,47 @@ function generateSequence() {
   }
   console.log(colorSequence);
 }
-  $("#reset").click(function (){
 
-      colorSequence = [];
-      numberRight = 0;
-      numberProgress = 0;
-      $("#count").html("Recount");
-      setPadsInactive();
-      setInfo("Press Start to begin.")
+function resetButton() {
+  //console.log("reset clicked");
+  document.getElementById("start").onclick = function() {
+    startButton();
+  };
+  // document.getElementById("start").innerHTML = "Start";
+  $("#start").html("Start");
+  
+  colorSequence = [];
+  numberRight = 0;
+  numberProgress = 0;
+  //document.getElementById("count").innerHTML = "--";
+  $("#count").html("Recount");
+  setPadsInactive();
+  setInfo("Press Start to begin.")
+}
 
-  });
-    $("#start").click(function (){
-        setControlsInactive();
-        // $("#reset").addClass('hidden');
-        $("#count").html(0);
-        generateSequence();
-        // loop,
-        playSequence()
-    });
+function startButton() {
+  //console.log("start clicked");
+  
+	  var startReset = document.getElementById("start").onclick = function() {
+	   resetButton(); 
+	   };
+   //var startReset = $("#start").click(function() {
+    //resetButton(); } );
+  
+  alert("resetStart: " + startReset);
+  //document.getElementById("start").innerHTML = "Reset";
+  $("#start").html("Reset");
+  
+  setControlsInactive();
+ // document.getElementById("count").innerHTML = 0;
+	$("#count").html(0);
+  generateSequence();
 
+  // loop,
+  playSequence();
+    
 
-
-
-// function resetButton() {
-//
-//   document.getElementById("start").onclick = function() {
-//     startButton();
-//   };
-//
-//   $("#start").html("Start");
-//     setControlsInactive();
-//     // document.getElementById("count").innerHTML = 0;
-//     $("#count").html(0);
-//     generateSequence();
-//
-//     // loop,
-//     playSequence();
-// }
-
-
-
-// function startButton() {
-//   //console.log("start clicked");
-//
-// 	  // var startReset = document.getElementById("start").onclick = function() {
-// 	  //  resetButton();
-// 	//   };
-//    var startReset = $("#start").click(function() {
-//     resetButton(); } );
-//
-//   alert("resetStart: " + startReset);
-//   //document.getElementById("start").innerHTML = "Reset";
-//   $("#start").html("Reset");
-//
-//   setControlsInactive();
-//  // document.getElementById("count").innerHTML = 0;
-// 	$("#count").html(0);
-//   generateSequence();
-//
-//   // loop,
-//   playSequence();
-//
-//
-// }
-//
+}
 
 function strictButton() {
   //console.log("strict clicked");
@@ -170,178 +144,161 @@ function strictButton() {
     
 }
 
-function simonMain(color) {
-    //console.log(color + " pressed");
-    console.log("Mode: " + mode);
+function padPress(color) {
+  //console.log(color + " pressed");
+  console.log("Mode"+mode);
 
+  
+  // if checking against 
+  if(mode==="userInput") {
+    
+    //console.log("checking User input");
+    if(color === colorSequence[numberProgress]) {
+      
+      //console.log("correct, got: " + numberProgress + " of " + numberRight);
+      // setInfo("Correct! " + numberProgrss + " out of " + numberRight);
+      numberProgress++;
+      
+      if(numberProgress===20)
+      {
+        setInfo("You win!");
+        setPadsInactive();
+        return;
+      }
+      
+      if(numberProgress === (numberRight+1)) {
+        numberRight++;
+        //document.getElementById("count").innerHTML = numberRight;
+		$("#count").html(numberRight);
+        //console.log("Got sequence correct");
+        setPadsInactive();
+        
+        setTimeout(function() {
+          //soundBlu.play();
+          setInfo("Correct - wait for the sequence to repeat but with one more on the end");
+        }, 1000);
+                
+        setTimeout(function() {
+          playSequence();
+        }, 4000);
 
-    // if checking against
-    if (mode === "userInput") {
+      }
+      
+    } else {
+      //console.log("INCORRECT");
+      setPadsInactive();
 
-        //console.log("checking User input");
-        if (color === colorSequence[numberProgress]) {
-
-            //console.log("correct, got: " + numberProgress + " of " + numberRight);
-            // setInfo("Correct! " + numberProgrss + " out of " + numberRight);
-            numberProgress++;
-
-            if (numberProgress === 20) {
-                setInfo("You win!");
-                setPadsInactive();
-                return;
-            }
-
-            if (numberProgress === (numberRight + 1)) {
-                numberRight++;
-                //document.getElementById("count").innerHTML = numberRight;
-                $("#count").html(numberRight);
-                //console.log("Got sequence correct");
-                setPadsInactive();
-
-                setTimeout(function () {
-                    //soundBlu.play();
-                    setInfo("Correct - wait for the sequence " + "<br>" + "to repeat but with one more on the end");
-                }, 1000);
-
-                setTimeout(function () {
-                    playSequence();
-                }, 4000);
-
-            }
-
-        } else {
-            //console.log("INCORRECT");
-            setPadsInactive();
-
-            setTimeout(function () {
-                soundBlu.play();
-
-                if (strict) {
-                    //console.log("start again");
-                    setInfo("Play Mode. Restart from 0");
-                    numberProgess = 0;
-                    numberRight = 0;
-                    $("#count").html(numberRight);
-
-                    setTimeout(function () {
-                        playSequence();
-                    }, 1000);
-
-                } else {
-                    //console.log("have another go");
-                    numberProgress = 0;
-                    setInfo("Demo Mode: one more chance!");
-
-                    setTimeout(function () {
-                        playSequence();
-                    }, 1000);
-                }
-            }, 250);
-
-        }
-
+      setTimeout(function() {
+          soundBlu.play();
+        
+          if(strict) {
+            //console.log("start again");
+            setInfo("Play Mode. Restart from 0");
+            numberProgess = 0;
+            numberRight = 0;
+            
+            setTimeout(function() { playSequence(); },1000);
+            
+          } else {
+            //console.log("have another go");
+            numberProgress = 0;
+            setInfo("Demo Mode: one more chance!");
+            
+            setTimeout(function() { playSequence(); },1000);
+          }
+      }, 250);
+      
     }
+        
+  }
+    
+  
+  var origColor = document.getElementById(color).style.backgroundColor;
+	console.log("Couleur: "+ color);
+	console.log("Couleur origine: "+ origColor);
+	
+  switch (color) {
+    case 'blu':
+      soundYel.play();
+      document.getElementById(color).style.backgroundColor = "lightblue";
+      break;
+    case 'red':
+      soundYel.play();
+      document.getElementById(color).style.backgroundColor = "lightcoral";
+      break;
+    case 'yel':
+      soundYel.play();
+      document.getElementById(color).style.backgroundColor = "lightyellow";
+      break;
+    case 'gre':
+      soundYel.play();
+      document.getElementById(color).style.backgroundColor = "lightgreen";
+      break;
+  }
 
-
-    var origColor = document.getElementById(color).style.backgroundColor;
-    console.log("Couleur: " + color);
-    // console.log("Couleur origine: "+ origColor);
-
-    switch (color) {
-        case 'blu':
-            soundYel.play();
-            document.getElementById(color).style.backgroundColor = "lightblue";
-            break;
-        case 'red':
-            soundYel.play();
-            document.getElementById(color).style.backgroundColor = "lightcoral";
-            break;
-        case 'yel':
-            soundYel.play();
-            document.getElementById(color).style.backgroundColor = "lightyellow";
-            break;
-        case 'gre':
-            soundYel.play();
-            document.getElementById(color).style.backgroundColor = "lightgreen";
-            break;
-    }
-
-    setTimeout(function () {
-        document.getElementById(color).style.backgroundColor = origColor;
-    }, 500);
+  setTimeout(function() {
+    document.getElementById(color).style.backgroundColor = origColor;
+  }, 500);
 }
-    function setControlsActive() {
-        var isStart = $("#start").html();
-        console.log(isStart);
-        if (isStart === "Start") {
-            setControlsInactive();
 
-        } else {
-            setPadsInactive();
-            setInfo("Press Start to begin.")
+function setControlsActive() {
 
-        }
+  if(document.getElementById("start").innerHTML === "Start") {
+    document.getElementById("start").onclick = function() {
+      startButton();
+    };
+  } else {
+    document.getElementById("start").onclick = function() {
+      resetButton();
+    };
+  }
+  
+  document.getElementById("start").style.cursor = "pointer";
 
-        // if(document.getElementById("start").innerHTML === "Start") {
-        //   document.getElementById("start").onclick = function() {
-        //     startButton();
-        //   };
-        // } else {
-        //   document.getElementById("start").onclick = function() {
-        //     resetButton();
-        //   };
-        // };
-        //
-        document.getElementById("start").style.cursor = "pointer";
+  document.getElementById("strict").onclick = function() {
+    strictButton();
+  };
+  document.getElementById("strict").style.cursor = "pointer";
+}
 
-        document.getElementById("strict").onclick = function () {
-            strictButton();
-        };
-        document.getElementById("strict").style.cursor = "pointer";
-    }
+function setControlsInactive() {
+  
+  document.getElementById("start").onclick = "";
+  document.getElementById("start").style.cursor = "not-allowed";
+  document.getElementById("strict").onclick = "";
+  document.getElementById("strict").style.cursor = "not-allowed";
+}
 
-    function setControlsInactive() {
+function setPadsActive() {
+  document.getElementById("blu").onclick = function() {
+    padPress("blu");
+  };
+  document.getElementById("gre").onclick = function() {
+    padPress("gre");
+  };
+  document.getElementById("yel").onclick = function() {
+    padPress("yel");
+  };
+  document.getElementById("red").onclick = function() {
+    padPress("red");
+  };
+  document.getElementById("blu").style.cursor = "pointer";
+  document.getElementById("gre").style.cursor = "pointer";
+  document.getElementById("yel").style.cursor = "pointer";
+  document.getElementById("red").style.cursor = "pointer";
+}
 
-        document.getElementById("start").onclick = "";
-        document.getElementById("start").style.cursor = "not-allowed";
-        // $("#start").click(false);
-        // $("#start").css({cursor:"default"});
-        document.getElementById("strict").onclick = "";
-        document.getElementById("strict").style.cursor = "not-allowed";
+function setPadsInactive() {
+  document.getElementById("blu").onclick = "";
+  document.getElementById("gre").onclick = "";
+  document.getElementById("yel").onclick = "";
+  document.getElementById("red").onclick = "";
 
-    }
-
-    function setPadsActive() {
-        document.getElementById("blu").onclick = function () {
-            simonMain("blu");
-        };
-        document.getElementById("gre").onclick = function () {
-            simonMain("gre");
-        };
-        document.getElementById("yel").onclick = function () {
-            simonMain("yel");
-        };
-        document.getElementById("red").onclick = function () {
-            simonMain("red");
-        };
-        document.getElementById("blu").style.cursor = "pointer";
-        document.getElementById("gre").style.cursor = "pointer";
-        document.getElementById("yel").style.cursor = "pointer";
-        document.getElementById("red").style.cursor = "pointer";
-    }
-
-    function setPadsInactive() {
-        document.getElementById("blu").onclick = "";
-        document.getElementById("gre").onclick = "";
-        document.getElementById("yel").onclick = "";
-        document.getElementById("red").onclick = "";
-
-        document.getElementById("blu").style.cursor = "not-allowed";
-        document.getElementById("gre").style.cursor = "not-allowed";
-        document.getElementById("yel").style.cursor = "not-allowed";
-        document.getElementById("red").style.cursor = "not-allowed";
-    }
-
+  document.getElementById("blu").style.cursor = "not-allowed";
+  document.getElementById("gre").style.cursor = "not-allowed";
+  document.getElementById("yel").style.cursor = "not-allowed";
+  document.getElementById("red").style.cursor = "not-allowed";
+}
 });
 //	function setForUserPress() {}
 
